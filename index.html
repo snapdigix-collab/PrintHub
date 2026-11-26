@@ -201,8 +201,8 @@ input:focus,select:focus,textarea:focus{
   </div>
 
   <form id="printForm">
-    <label for="customerName">Customer Name *</label>
-    <input id="customerName" required maxlength="100"
+    <label for="customerName">Customer Name (Optional)</label>
+    <input id="customerName" maxlength="100"
       placeholder="Enter your full name">
 
     <label for="mobile">Mobile Number *</label>
@@ -212,10 +212,10 @@ input:focus,select:focus,textarea:focus{
     <label>Upload Documents *</label>
     <div class="upload" id="uploadArea">
       <strong>＋ Choose Files</strong>
-      <p>PDF, JPG or PNG · Maximum 10 files</p>
+      <p>Any file type · Maximum 10 files</p>
       <p>5 MB per file · 20 MB total</p>
     </div>
-    <input type="file" id="files" multiple accept=".pdf,.jpg,.jpeg,.png"
+    <input type="file" id="files" multiple
       style="display:none">
     <div id="fileList" class="file-list"></div>
 
@@ -239,29 +239,7 @@ input:focus,select:focus,textarea:focus{
       </div>
     </div>
 
-    <div class="row">
-      <div>
-        <label for="copies">Copies *</label>
-        <select id="copies">
-          <option value="1">1 Copy</option>
-          <option value="2">2 Copies</option>
-          <option value="3">3 Copies</option>
-          <option value="4">4 Copies</option>
-          <option value="5">5 Copies</option>
-          <option value="10">10 Copies</option>
-          <option value="20">20 Copies</option>
-          <option value="50">50 Copies</option>
-          <option value="100">100 Copies</option>
-        </select>
-      </div>
-      <div>
-        <label for="paperSize">Paper Size</label>
-        <select id="paperSize">
-          <option value="A4">A4</option>
-          <option value="A3">A3</option>
-        </select>
-      </div>
-    </div>
+
 
     <label for="instructions">Additional Instructions (Optional)</label>
     <textarea id="instructions" rows="3" maxlength="500"
@@ -273,7 +251,7 @@ input:focus,select:focus,textarea:focus{
 
     <div id="message" class="message"></div>
     <div class="notice">
-      Please check your selected files and print options before submitting.
+      Please check your selected files and print type before submitting.
     </div>
   </form>
 </div>
@@ -309,14 +287,9 @@ function addFiles(newFiles) {
     return;
   }
 
-  const allowed = ["application/pdf", "image/jpeg", "image/png"];
   const totalSize = combined.reduce((sum, f) => sum + f.size, 0);
 
   for (const file of newFiles) {
-    if (!allowed.includes(file.type)) {
-      showMessage("Only PDF, JPG and PNG files are accepted.", "error");
-      return;
-    }
     if (file.size > 5 * 1024 * 1024) {
       showMessage(file.name + " exceeds 5 MB.", "error");
       return;
@@ -437,8 +410,6 @@ document.getElementById("printForm").addEventListener("submit", async (event) =>
       customerName: name,
       mobile: mobile,
       printType: document.querySelector('input[name="printType"]:checked').value,
-      copies: Number(document.getElementById("copies").value),
-      paperSize: document.getElementById("paperSize").value,
       instructions: document.getElementById("instructions").value.trim(),
       files: filesPayload
     };
