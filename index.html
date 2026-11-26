@@ -1,0 +1,483 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SNAP Enterprises | Online Print</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#f5f6f8;
+  color:#202124
+}
+header{
+  background:#fff;
+  border-bottom:1px solid #eee;
+  padding:18px 20px
+}
+.brand{
+  max-width:720px;
+  margin:auto;
+  font-size:23px;
+  font-weight:800;
+  letter-spacing:.3px
+}
+.brand span{color:#f47b00}
+.brand small{
+  display:block;
+  margin-top:5px;
+  font-size:12px;
+  font-weight:400;
+  color:#777
+}
+.container{
+  max-width:720px;
+  margin:25px auto;
+  padding:0 14px
+}
+.card{
+  background:#fff;
+  border-radius:18px;
+  padding:22px;
+  box-shadow:0 4px 20px rgba(0,0,0,.04)
+}
+h1{font-size:23px;margin:0 0 8px}
+.subtitle{
+  font-size:14px;
+  color:#737373;
+  line-height:1.5;
+  margin-bottom:22px
+}
+label{
+  display:block;
+  font-size:14px;
+  font-weight:700;
+  margin:17px 0 8px
+}
+input,select,textarea{
+  width:100%;
+  padding:13px;
+  border:1px solid #ddd;
+  border-radius:10px;
+  font-size:15px;
+  outline:none;
+  background:white
+}
+input:focus,select:focus,textarea:focus{
+  border-color:#f47b00;
+  box-shadow:0 0 0 2px #fff0df
+}
+.upload{
+  border:2px dashed #f2bd82;
+  border-radius:14px;
+  padding:25px 15px;
+  text-align:center;
+  background:#fffaf5;
+  cursor:pointer
+}
+.upload strong{display:block;color:#e87500;margin-bottom:7px}
+.upload p{margin:0;font-size:13px;color:#777}
+.file-list{margin-top:12px}
+.file-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:11px;
+  margin-bottom:8px;
+  border:1px solid #eee;
+  border-radius:10px
+}
+.file-info{flex:1;min-width:0}
+.file-name{
+  font-size:13px;
+  font-weight:700;
+  overflow-wrap:anywhere
+}
+.file-size{font-size:12px;color:#777;margin-top:4px}
+.remove{
+  border:0;
+  background:#fff0f0;
+  color:#d33;
+  border-radius:8px;
+  padding:8px 10px;
+  cursor:pointer
+}
+.types{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px
+}
+.type-option{position:relative}
+.type-option input{
+  position:absolute;
+  opacity:0;
+  pointer-events:none
+}
+.type-option label{
+  border:1.5px solid #e4e4e4;
+  border-radius:12px;
+  padding:17px 10px;
+  margin:0;
+  text-align:center;
+  cursor:pointer;
+  transition:.15s
+}
+.type-option input:checked+label{
+  border-color:#f47b00;
+  background:#fff7ed;
+  color:#d86c00
+}
+.type-option .symbol{
+  display:block;
+  font-size:24px;
+  margin-bottom:7px
+}
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px
+}
+.submit{
+  width:100%;
+  border:0;
+  border-radius:12px;
+  padding:16px;
+  margin-top:22px;
+  background:#f47b00;
+  color:white;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer
+}
+.submit:disabled{opacity:.6;cursor:wait}
+.notice{
+  margin-top:15px;
+  font-size:12px;
+  color:#777;
+  line-height:1.5;
+  text-align:center
+}
+.message{
+  display:none;
+  margin-top:15px;
+  padding:14px;
+  border-radius:10px;
+  font-size:14px;
+  line-height:1.5
+}
+.message.error{display:block;background:#fff0f0;color:#b42318}
+.message.success{display:block;background:#eaf7ee;color:#18743b}
+.footer{
+  text-align:center;
+  color:#888;
+  font-size:12px;
+  padding:22px
+}
+@media(max-width:480px){
+  .container{margin:15px auto}
+  .card{padding:18px}
+  h1{font-size:21px}
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="brand">SNAP <span>ENTERPRISES</span>
+    <small>Online Document Printing</small>
+  </div>
+</header>
+
+<main class="container">
+<div class="card">
+  <h1>Print Your Documents</h1>
+  <div class="subtitle">
+    Upload your documents, choose your printing preferences
+    and submit your request.
+  </div>
+
+  <form id="printForm">
+    <label for="customerName">Customer Name *</label>
+    <input id="customerName" required maxlength="100"
+      placeholder="Enter your full name">
+
+    <label for="mobile">Mobile Number *</label>
+    <input id="mobile" required inputmode="numeric"
+      maxlength="10" placeholder="10-digit mobile number">
+
+    <label>Upload Documents *</label>
+    <div class="upload" id="uploadArea">
+      <strong>＋ Choose Files</strong>
+      <p>PDF, JPG or PNG · Maximum 10 files</p>
+      <p>5 MB per file · 20 MB total</p>
+    </div>
+    <input type="file" id="files" multiple accept=".pdf,.jpg,.jpeg,.png"
+      style="display:none">
+    <div id="fileList" class="file-list"></div>
+
+    <label>Printing Type *</label>
+    <div class="types">
+      <div class="type-option">
+        <input type="radio" name="printType" id="bw"
+          value="BLACK_WHITE" checked>
+        <label for="bw">
+          <span class="symbol">◑</span>
+          Black &amp; White
+        </label>
+      </div>
+      <div class="type-option">
+        <input type="radio" name="printType" id="colour"
+          value="COLOUR">
+        <label for="colour">
+          <span class="symbol">▤</span>
+          Colour Print
+        </label>
+      </div>
+    </div>
+
+    <div class="row">
+      <div>
+        <label for="copies">Copies *</label>
+        <select id="copies">
+          <option value="1">1 Copy</option>
+          <option value="2">2 Copies</option>
+          <option value="3">3 Copies</option>
+          <option value="4">4 Copies</option>
+          <option value="5">5 Copies</option>
+          <option value="10">10 Copies</option>
+          <option value="20">20 Copies</option>
+          <option value="50">50 Copies</option>
+          <option value="100">100 Copies</option>
+        </select>
+      </div>
+      <div>
+        <label for="paperSize">Paper Size</label>
+        <select id="paperSize">
+          <option value="A4">A4</option>
+          <option value="A3">A3</option>
+        </select>
+      </div>
+    </div>
+
+    <label for="instructions">Additional Instructions (Optional)</label>
+    <textarea id="instructions" rows="3" maxlength="500"
+      placeholder="Any special instructions..."></textarea>
+
+    <button class="submit" id="submitBtn" type="submit">
+      SUBMIT PRINT REQUEST
+    </button>
+
+    <div id="message" class="message"></div>
+    <div class="notice">
+      Please check your selected files and print options before submitting.
+    </div>
+  </form>
+</div>
+</main>
+
+<div class="footer">
+  SNAP Enterprises · Xerox, Printing &amp; Document Services
+</div>
+
+<script>
+const API_URL = "PASTE_YOUR_DEPLOYED_APPS_SCRIPT_URL_HERE";
+
+const fileInput = document.getElementById("files");
+const uploadArea = document.getElementById("uploadArea");
+const fileListEl = document.getElementById("fileList");
+const submitBtn = document.getElementById("submitBtn");
+const messageEl = document.getElementById("message");
+
+let selectedFiles = [];
+
+uploadArea.addEventListener("click", () => fileInput.click());
+
+fileInput.addEventListener("change", () => {
+  addFiles(Array.from(fileInput.files || []));
+  fileInput.value = "";
+});
+
+function addFiles(newFiles) {
+  const combined = [...selectedFiles, ...newFiles];
+
+  if (combined.length > 10) {
+    showMessage("Maximum 10 files allowed per order.", "error");
+    return;
+  }
+
+  const allowed = ["application/pdf", "image/jpeg", "image/png"];
+  const totalSize = combined.reduce((sum, f) => sum + f.size, 0);
+
+  for (const file of newFiles) {
+    if (!allowed.includes(file.type)) {
+      showMessage("Only PDF, JPG and PNG files are accepted.", "error");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      showMessage(file.name + " exceeds 5 MB.", "error");
+      return;
+    }
+  }
+
+  if (totalSize > 20 * 1024 * 1024) {
+    showMessage("Total files cannot exceed 20 MB.", "error");
+    return;
+  }
+
+  selectedFiles = combined;
+  renderFiles();
+  clearMessage();
+}
+
+function renderFiles() {
+  fileListEl.innerHTML = "";
+
+  selectedFiles.forEach((file, index) => {
+    const item = document.createElement("div");
+    item.className = "file-item";
+
+    const info = document.createElement("div");
+    info.className = "file-info";
+
+    const name = document.createElement("div");
+    name.className = "file-name";
+    name.textContent = file.name;
+
+    const size = document.createElement("div");
+    size.className = "file-size";
+    size.textContent = formatSize(file.size);
+
+    info.append(name, size);
+
+    const remove = document.createElement("button");
+    remove.className = "remove";
+    remove.type = "button";
+    remove.textContent = "Remove";
+    remove.onclick = () => {
+      selectedFiles.splice(index, 1);
+      renderFiles();
+    };
+
+    item.append(info, remove);
+    fileListEl.appendChild(item);
+  });
+}
+
+function formatSize(bytes) {
+  return bytes < 1024 * 1024
+    ? (bytes / 1024).toFixed(0) + " KB"
+    : (bytes / (1024 * 1024)).toFixed(2) + " MB";
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const result = String(reader.result || "");
+      resolve(result.split(",")[1] || "");
+    };
+
+    reader.onerror = () => reject(new Error("Could not read " + file.name));
+    reader.readAsDataURL(file);
+  });
+}
+
+function showMessage(text, type) {
+  messageEl.className = "message " + type;
+  messageEl.textContent = text;
+}
+
+function clearMessage() {
+  messageEl.className = "message";
+  messageEl.textContent = "";
+}
+
+document.getElementById("printForm").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  clearMessage();
+
+  const name = document.getElementById("customerName").value.trim();
+  const mobile = document.getElementById("mobile").value.trim();
+
+  if (!/^[0-9]{10}$/.test(mobile)) {
+    showMessage("Please enter a valid 10-digit mobile number.", "error");
+    return;
+  }
+
+  if (!selectedFiles.length) {
+    showMessage("Please upload at least one document.", "error");
+    return;
+  }
+
+  if (API_URL.includes("PASTE_YOUR")) {
+    showMessage("Website UI is ready. Backend URL will be connected after deployment.", "error");
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Preparing upload...";
+
+  try {
+    const filesPayload = [];
+
+    for (const file of selectedFiles) {
+      filesPayload.push({
+        name: file.name,
+        mimeType: file.type,
+        base64: await fileToBase64(file)
+      });
+    }
+
+    const payload = {
+      customerName: name,
+      mobile: mobile,
+      printType: document.querySelector('input[name="printType"]:checked').value,
+      copies: Number(document.getElementById("copies").value),
+      paperSize: document.getElementById("paperSize").value,
+      instructions: document.getElementById("instructions").value.trim(),
+      files: filesPayload
+    };
+
+    submitBtn.textContent = "Submitting request...";
+
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error(result.message || "Upload failed.");
+    }
+
+    showMessage(
+      "Request submitted successfully! Order ID: " + result.orderId,
+      "success"
+    );
+
+    document.getElementById("printForm").reset();
+    selectedFiles = [];
+    renderFiles();
+
+  } catch (error) {
+    showMessage(
+      error.message || "Upload failed. Please try again.",
+      "error"
+    );
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "SUBMIT PRINT REQUEST";
+  }
+});
+</script>
+</body>
+</html>
